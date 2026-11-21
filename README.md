@@ -13,7 +13,7 @@
 
 ### 2. Unified Authentication System (Citizen & Officer)
 - **Citizen Account**: Quick login or registration with name, email, and city. Auto-populates citizen credentials on grievance submissions.
-- **Municipal Officer Access**: Secured with government departmental security passkeys (e.g. `KHP-9021`, `WASA-9941`, `SEPCO-8812`, `KWSB-7742`). Includes 1-click testing accounts for classroom demonstrations.
+- **Municipal Officer Access**: Secured with government departmental security passkeys (e.g. `SEPCO-8812` for Khairpur Mirs Sub-Division). Includes 1-click testing accounts for classroom demonstrations.
 
 ### 3. Department Auto-Routing (Zero Misdirection)
 - Form provides explicit **Category** and **Department** `<select>` controls.
@@ -82,9 +82,9 @@
 ## How to Run the Project
 
 ### Option A: The Full-Stack Node.js Way (Recommended for Course Demo)
-1. Open PowerShell / Command Prompt:
+1. Open terminal inside the project directory:
    ```bash
-   cd "C:\Users\marzi\.gemini\antigravity\scratch\Web_Engineering_Project\server"
+   cd server
    node server.js
    ```
 2. Open your browser at:
@@ -93,6 +93,5 @@
    ```
 
 ### Option B: Direct Double-Click (No Terminal Required)
-1. In File Explorer, go to `C:\Users\marzi\.gemini\antigravity\scratch\Web_Engineering_Project`.
-2. Double-click `index.html`.
-3. It opens directly in Chrome or Edge and connects to Supabase Cloud REST and local storage.
+1. Double-click `index.html` in the project root directory.
+2. It opens directly in Chrome or Edge and connects to Supabase Cloud REST and local storage.
