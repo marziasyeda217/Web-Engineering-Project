@@ -277,6 +277,21 @@ app.post('/api/auth/register', (req, res) => {
     users.push(newUser);
     saveUsers(users);
 
+    // Try Supabase Cloud Insert for Users
+    if (SUPABASE_URL && SUPABASE_KEY) {
+        try {
+            fetch(`${SUPABASE_URL}/rest/v1/users`, {
+                method: 'POST',
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newUser)
+            }).catch(() => {});
+        } catch (e) {}
+    }
+
     const { password: _, ...safeUser } = newUser;
     return res.status(201).json({ success: true, user: safeUser, message: 'Account registered successfully.' });
 });
