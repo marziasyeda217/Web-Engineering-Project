@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUASHRA (معاشرہ) - Public Civic Grievance & Municipal Accountability Engine</title>
+    
+    <!-- External CSS (Course Topic: External Stylesheet) -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Internal CSS (Course Topic: Internal Stylesheet) -->
+    <style>
+        .urdu-text {
+            font-family: 'Nastaliq', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', serif;
+            direction: rtl;
+        }
+        .badge-pulse {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 0 rgba(16, 185, 129, 0.4);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Live Announcement Bar (Course Topic: <header>) -->
+    <header class="top-announcement-bar">
+        <div class="top-bar-content">
+            <div class="top-bar-left">
+                <span class="badge-pulse"></span>
+                <span><strong>MUASHRA CIVIC ENGINE:</strong> Public Grievance & Institutional Transparency Portal</span>
+            </div>
+            <div class="top-bar-right">
+                <span id="live-time-display">PST: --:-- --</span>
+                <span class="divider">|</span>
+                <span id="top-user-indicator">Welcome, Citizen</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- App Main Layout (Course Topic: Flexbox Container) -->
+    <div class="app-layout">
+        
+        <!-- ============================================================== -->
+        <!-- SEMANTIC SIDEBAR (Course Topic: <aside>, <nav>, <ul>, <li>, <a>) -->
+        <!-- ============================================================== -->
+        <aside class="sidebar">
+            
+            <!-- Logo & Branding -->
+            <div class="sidebar-brand">
+                <div class="brand-logo-box">
+                    <span class="brand-letter">م</span>
+                </div>
+                <div class="brand-titles">
+                    <h2>MUASHRA</h2>
+                    <span class="urdu-title">معاشرہ</span>
+                </div>
+            </div>
+            <p class="brand-tagline">Public Civic Governance Engine</p>
+
+            <!-- User Session Card -->
+            <div id="sidebar-user-card" class="sidebar-user-card">
+                <div class="user-avatar-circle" id="user-avatar-circle">👤</div>
+                <div class="user-details">
+                    <strong id="sidebar-user-name">Guest Citizen</strong>
+                    <span id="sidebar-user-badge" class="role-tag guest">Not Logged In</span>
+                </div>
+            </div>
+
+            <!-- Primary Navigation Links (Course Topic: <nav>, <ul>, <li>, <a>) -->
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="#overview-section" class="nav-item active" data-target="overview-section">
+                            <span class="nav-icon">🏠</span>
+                            <span class="nav-label">Overview & Aim</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#report-section" class="nav-item" data-target="report-section">
+                            <span class="nav-icon">📝</span>
+                            <span class="nav-label">File a Complaint</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#feed-section" class="nav-item" data-target="feed-section">
+                            <span class="nav-icon">📋</span>
+                            <span class="nav-label">Neighborhood Feed</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#departments-section" class="nav-item" data-target="departments-section">
+                            <span class="nav-icon">🏛️</span>
+                            <span class="nav-label">Department SLAs</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#officer-section" class="nav-item" data-target="officer-section">
+                            <span class="nav-icon">🛡️</span>
+                            <span class="nav-label">Officer Portal</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#stats-section" class="nav-item" data-target="stats-section">
+                            <span class="nav-icon">📊</span>
+                            <span class="nav-label">Civic Statistics</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Quick Action Buttons in Sidebar -->
+            <div class="sidebar-cta-group">
+                <button type="button" id="sidebar-file-btn" class="btn btn-sidebar-primary">
+                    <span>➕</span> File a Complaint
+                </button>
+                <button type="button" id="sidebar-auth-btn" class="btn btn-sidebar-secondary">
+                    <span>🔑</span> Sign In / Register
+                </button>
+            </div>
+
+            <!-- Sidebar Institutional Badges -->
+            <div class="sidebar-footer">
+                <p><strong>Departments Connected:</strong></p>
+                <div class="dept-pills">
+                    <span class="pill">WASA</span>
+                    <span class="pill">SEPCO</span>
+                    <span class="pill">KW&SB</span>
+                    <span class="pill">SSWMB</span>
+                    <span class="pill">C&W</span>
+                    <span class="pill">PHED</span>
+                    <span class="pill">LESCO</span>
+                    <span class="pill">KE</span>
+                </div>
+                <small>&copy; 2026 Web Engineering Course</small>
+            </div>
+        </aside>
+
+        <!-- ============================================================== -->
+        <!-- SEMANTIC MAIN CONTENT AREA (Course Topic: <main>) -->
+        <!-- ============================================================== -->
+        <main class="main-content">
+
+            <!-- ============================================================== -->
+            <!-- 1. OVERVIEW & AIM SECTION (Course Topic: <section>, <article>, <img>) -->
+            <!-- ============================================================== -->
+            <section id="overview-section" class="content-section">
+                
+                <!-- Hero Banner Card -->
+                <div class="hero-card">
+                    <div class="hero-text-side">
+                        <span class="hero-chip">MUASHRA CIVIC ENTERPRISE</span>
+                        <h1>Har Complaint Ki Awaaz, <br><span class="highlight-green">Har Sarkari Idaray Ki Zimmedari</span></h1>
+                        <p class="hero-desc">
+                            Report civic infrastructure issues in your neighborhood using just your voice or text. 
+                            Muashra converts your complaint into a formal administrative petition, routes it to the 
+                            exact municipal department, and tracks it until verified resolution.
+                        </p>
+                        
+                        <div class="hero-buttons">
+                            <button type="button" class="btn btn-primary" onclick="scrollToSection('report-section')">
+                                File a Complaint Now ➔
+                            </button>
+                            <button type="button" class="btn btn-outline" onclick="scrollToSection('departments-section')">
+                                View Department SLAs
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Authentic Project Image Showcase (Course Topic: <img>) -->
+                    <div class="hero-media-side">
+                        <div class="image-gallery-card">
+                            <img src="images/pakistan_flag.jpg" alt="Pakistan Civic Governance" class="gallery-img active">
+                            <div class="gallery-caption">
+                                <strong>National Civic Duty & Institutional Accountability</strong>
+                                <span>Empowering citizens with SLA-tracked digital governance.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mission & Goals Grid (Course Topic: <article>, Flexbox) -->
+                <div class="mission-section">
+                    <div class="section-heading">
+                        <h3>Bridging Citizens & Municipal Infrastructure</h3>
+                        <p>Designed for effortless civic participation with zero red tape.</p>
+                    </div>
+
+                    <div class="mission-grid">
+                        <article class="mission-card">
+                            <div class="mission-img-wrap">
+                                <img src="images/cleaning_crew.jpg" alt="Community Sanitation" class="card-thumb">
+                            </div>
+                            <div class="mission-body">
+                                <div class="mission-icon">🎤</div>
+                                <h4>Urdu Voice Transcription</h4>
+                                <p>Speak freely in Urdu or Roman Urdu. Built-in speech-to-text turns your voice into structured administrative petitions.</p>
+                            </div>
+                        </article>
+
+                        <article class="mission-card">
+                            <div class="mission-img-wrap">
+                                <img src="images/electrician_work.jpg" alt="Power Infrastructure" class="card-thumb">
+                            </div>
+                            <div class="mission-body">
+                                <div class="mission-icon">⚡</div>
+                                <h4>Precision Department Routing</h4>
+                                <p>Automated classification assigns complaints directly to SEPCO, WASA, KW&SB, or SSWMB with verified response SLAs.</p>
+                            </div>
+                        </article>
+
+                        <article class="mission-card">
+                            <div class="mission-img-wrap">
+                                <img src="images/pakistan_flag.jpg" alt="Transparent Governance" class="card-thumb">
+                            </div>
+                            <div class="mission-body">
+                                <div class="mission-icon">🗳️</div>
+                                <h4>Community Upvote & Intensify</h4>
+                                <p>Neighbors can vote to intensify issues. Critical votes trigger automatic escalation to Deputy Commissioners & Secretaries.</p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <!-- 4 Steps Explanation (Course Topic: <ol>, <li>) -->
+                <div class="steps-wrapper">
+                    <div class="section-heading">
+                        <h3>How MUASHRA Works in 4 Simple Steps</h3>
+                    </div>
+                    <div class="steps-flex">
+                        <div class="step-box">
+                            <span class="step-number">1</span>
+                            <h5>Speak or Type</h5>
+                            <p>Dictate in Urdu or type your grievance in Roman Urdu or English.</p>
+                        </div>
+                        <div class="step-box">
+                            <span class="step-number">2</span>
+                            <h5>Live GPS Pinpoint</h5>
+                            <p>Click "Detect Live GPS" to automatically link your exact coordinates.</p>
+                        </div>
+                        <div class="step-box">
+                            <span class="step-number">3</span>
+                            <h5>AI Formats Petition</h5>
+                            <p>Groq AI categorizes the department and drafts formal legal petitions.</p>
+                        </div>
+                        <div class="step-box">
+                            <span class="step-number">4</span>
+                            <h5>Officer Resolution</h5>
+                            <p>Assigned municipal officers resolve tickets with official verification remarks.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- 2. FILE A COMPLAINT SECTION (Course Topic: <form>, input, select) -->
+            <!-- ============================================================== -->
+            <section id="report-section" class="content-section">
+                <div class="form-card-container">
+                    
+                    <div class="form-header-bar">
+                        <div class="form-header-left">
+                            <span class="badge-icon">📝</span>
+                            <div>
+                                <h3>File an Official Public Grievance</h3>
+                                <p>Speak in Urdu or type your issue. Category and department are auto-detected.</p>
+                            </div>
+                        </div>
+                        <div class="form-header-right">
+                            <button type="button" id="form-quick-auth-btn" class="btn btn-sm btn-outline">
+                                👤 Current Reporter: <strong id="form-reporter-name">Guest Citizen</strong>
+                            </button>
+                        </div>
+                    </div>
+
+                    <form id="complaint-form" novalidate>
+                        
+                        <!-- Feedback Banner (Course Topic: DOM InnerHTML updates) -->
+                        <div id="form-feedback" class="feedback-banner" style="display:none;"></div>
+
+                        <!-- Reporter Info Row -->
+                        <div class="form-grid-2">
+                            <div class="form-field">
+                                <label for="citizen-name">Your Full Name (آپ کا نام): <span class="required">*</span></label>
+                                <input type="text" id="citizen-name" name="citizenName" placeholder="e.g. Ahmed Khan" required>
+                            </div>
+                            <div class="form-field">
+                                <label for="citizen-phone">Contact / WhatsApp Number:</label>
+                                <input type="text" id="citizen-phone" name="citizenPhone" placeholder="0300-1234567">
+                            </div>
+                        </div>
+
+                        <!-- Voice Recorder Box (Course Topic: <audio> tag) -->
+                        <div class="voice-recording-card">
+                            <div class="voice-action-row">
+                                <button type="button" id="record-btn" class="btn btn-voice">
+                                    <span id="record-icon">🎤</span>
+                                    <span id="record-text">Speak in Urdu (آواز میں شکایت ریکارڈ کریں)</span>
+                                </button>
+                                <span id="voice-status" class="voice-status-indicator">Ready to record speech</span>
+                            </div>
+                            <p class="voice-help-text">
+                                💡 Tip: Click button and speak naturally (e.g. <em>"Humare mohallay mein paani ki line phat gayi hai"</em> or <em>"Bijli ka transformer jal gaya hai"</em>).
+                            </p>
+                            <!-- Audio Preview Element (Course Topic: <audio>) -->
+                            <audio id="audio-preview" controls style="display:none; width: 100%; margin-top: 10px;"></audio>
+                        </div>
+
+                        <!-- Grievance Description -->
+                        <div class="form-field">
+                            <label for="description">Grievance Description (مسئلہ کی تفصیل): <span class="required">*</span></label>
+                            <textarea id="description" name="description" rows="3" placeholder="Speak or describe the civic defect, leakage, road hazard, or load shedding problem here..." required></textarea>
+                        </div>
+
+                        <!-- AI Petition Engine Trigger -->
+                        <div class="ai-trigger-strip">
+                            <button type="button" id="ai-format-btn" class="btn btn-ai">
+                                ✨ Format with Groq AI Petition Engine
+                            </button>
+                            <span id="ai-loader" class="loader-message" style="display:none;">
+                                🤖 Groq AI structuring formal administrative petition...
+                            </span>
+                        </div>
+
+                        <!-- AI Result Preview Box -->
+                        <div id="ai-result-box" class="ai-preview-box" style="display:none;">
+                            <div class="ai-preview-header">
+                                <h5>🏛️ Administrative Legal Petition Draft</h5>
+                                <span class="badge-tag" id="ai-urgency-badge">Urgency: High</span>
+                            </div>
+                            <p><strong>Department Assigned:</strong> <span id="ai-department-preview" class="highlight-text">-</span></p>
+                            <p><strong>Formal Petition (English):</strong></p>
+                            <pre id="ai-formal-english" class="formal-petition-text"></pre>
+                            <p><strong>باقاعدہ اردو درخواست:</strong></p>
+                            <p id="ai-formal-urdu" class="urdu-text-block"></p>
+                        </div>
+
+                        <!-- Category & Department Selector Row (Prevents Wrong Department Routing) -->
+                        <div class="form-grid-2 department-selector-card">
+                            <div class="form-field">
+                                <label for="category-select">Civic Category (مسئلہ کی قسم): <span class="required">*</span></label>
+                                <select id="category-select" name="category" required>
+                                    <option value="Water & Sanitation">💧 Water & Sanitation (پانی اور سیوریج)</option>
+                                    <option value="Gas & Sui Gas Pipeline">🔥 Gas & Sui Gas Pipeline (سوئی گیس اور پائپ لائن)</option>
+                                    <option value="Electricity & Power">⚡ Electricity & Power (بجلی اور پاور)</option>
+                                    <option value="Waste Management">🗑️ Waste Management (کوڑا کرکٹ اور صفائی)</option>
+                                    <option value="Roads & Infrastructure">🛣️ Roads & Infrastructure (سڑکیں اور انفراسٹرکچر)</option>
+                                    <option value="Municipal Services">🏛️ Municipal Administration (عام بلدیاتی شکایات)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="department-select">Responsible Department (متعلقہ محکمہ): <span class="required">*</span></label>
+                                <select id="department-select" name="department" required>
+                                    <!-- Populated dynamically based on Category & District -->
+                                    <option value="Public Health Engineering Department">Public Health Engineering Department</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- GPS Fieldset (Course Topic: <fieldset>, <legend>, <iframe>) -->
+                        <fieldset class="gps-container">
+                            <legend>Incident Satellite & GPS Geolocation</legend>
+                            
+                            <div class="gps-action-strip">
+                                <button type="button" id="detect-gps-btn" class="btn btn-gps">
+                                    📍 Detect Live GPS Location
+                                </button>
+                                <span id="gps-status-text" class="status-tip">
+                                    Click button to acquire live coordinates (Fields start blank)
+                                </span>
+                            </div>
+
+                            <div class="form-grid-2">
+                                <div class="form-field">
+                                    <label for="district-select">District / City (شہر / ضلع):</label>
+                                    <!-- ALL 39 PAKISTAN DISTRICTS -->
+                                    <select id="district-select" name="city">
+                                        <option value="">-- Select District / City --</option>
+                                        <!-- Dynamically populated with all 39 districts -->
+                                    </select>
+                                </div>
+
+                                <div class="form-field">
+                                    <label for="street-address">Street Address / Campus Neighbourhood:</label>
+                                    <!-- STARTS COMPLETELY BLANK -->
+                                    <input type="text" id="street-address" name="address" placeholder="Starts blank. Autofilled on GPS click or type manually...">
+                                </div>
+                            </div>
+
+                            <!-- Embedded Interactive Map (Course Topic: <iframe>) -->
+                            <div class="map-wrapper">
+                                <iframe id="map-frame" 
+                                        src="https://maps.google.com/maps?q=27.5110,68.7416&z=15&output=embed" 
+                                        width="100%" 
+                                        height="220" 
+                                        style="border:0; border-radius: 12px;" 
+                                        allowfullscreen="" 
+                                        loading="lazy">
+                                </iframe>
+                                <div class="map-coordinates-bar">
+                                    <span>Satellite Coordinates:</span>
+                                    <code id="coords-display">Lat: --, Lng: --</code>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <!-- Submit Button -->
+                        <div class="form-submit-strip">
+                            <button type="submit" id="submit-btn" class="btn btn-submit-large">
+                                🚀 Submit Official Complaint to Department
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- 3. NEIGHBORHOOD FEED SECTION (Course Topic: <table>, filter) -->
+            <!-- ============================================================== -->
+            <section id="feed-section" class="content-section">
+                <div class="feed-card-container">
+                    
+                    <div class="feed-header-bar">
+                        <div>
+                            <h3>Neighborhood Grievances & Live Status Board</h3>
+                            <p>Real-time civic tickets lodged by local citizens with live department tracking.</p>
+                        </div>
+                        <div class="feed-header-actions">
+                            <button type="button" id="sort-votes-btn" class="btn btn-sm btn-outline">
+                                ⚡ Sort: Most Intensified First
+                            </button>
+                            <div class="feed-summary-chip">
+                                Total Complaints: <strong id="total-count-badge">0</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filter Controls (Course Topic: JS Array.filter() & Event Listeners) -->
+                    <div class="filter-controls-row">
+                        <div class="search-input-wrap">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="search-input" placeholder="Search by Ticket ID, Title, City, or Description...">
+                        </div>
+
+                        <div class="filter-select-wrap">
+                            <select id="city-filter">
+                                <option value="all">All 39 Districts (تمام اضلاع)</option>
+                                <!-- Populated with all 39 districts -->
+                            </select>
+
+                            <select id="status-filter">
+                                <option value="all">All Statuses (تمام حالات)</option>
+                                <option value="Pending">Pending (زیر غور)</option>
+                                <option value="In Progress">In Progress (کام جاری)</option>
+                                <option value="Resolved">Resolved (حل شدہ)</option>
+                            </select>
+
+                            <select id="category-filter">
+                                <option value="all">All Categories</option>
+                                <option value="Water & Sanitation">Water & Sanitation</option>
+                                <option value="Gas & Sui Gas Pipeline">Gas & Sui Gas Pipeline</option>
+                                <option value="Electricity & Power">Electricity & Power</option>
+                                <option value="Waste Management">Waste Management</option>
+                                <option value="Roads & Infrastructure">Roads & Infrastructure</option>
+                                <option value="Municipal Services">Municipal Services</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Complaints Table (Course Topic: Semantic <table>, <thead>, <tbody>) -->
+                    <div class="table-responsive-wrapper">
+                        <table class="styled-table" id="complaints-table">
+                            <thead>
+                                <tr>
+                                    <th>Ticket ID</th>
+                                    <th>Grievance Summary</th>
+                                    <th>Category</th>
+                                    <th>Responsible Department</th>
+                                    <th>District / Area</th>
+                                    <th>Urgency</th>
+                                    <th>Status</th>
+                                    <th>Community Voting & Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="complaints-tbody">
+                                <!-- Populated dynamically by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Clean Empty State when 0 complaints exist -->
+                    <div id="empty-state-box" class="empty-feed-card" style="display:none;">
+                        <span class="empty-icon">🌱</span>
+                        <h4>No Complaints Registered Yet</h4>
+                        <p>There are no active grievances lodged in this view. Be the first citizen to report an issue in your area!</p>
+                        <button type="button" class="btn btn-primary" onclick="scrollToSection('report-section')">
+                            ➕ File the First Grievance Now
+                        </button>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- 4. DEPARTMENT RESPONSIBILITY & SLA MATRIX SECTION (NEW SECTION) -->
+            <!-- ============================================================== -->
+            <section id="departments-section" class="content-section">
+                <div class="dept-matrix-container">
+                    
+                    <div class="dept-matrix-header">
+                        <div class="matrix-header-text">
+                            <span class="badge-tag">INSTITUTIONAL ACCOUNTABILITY</span>
+                            <h3>Government Department Directory & SLA Response Matrix</h3>
+                            <p>Every municipal authority in Pakistan has legal service level agreements (SLAs). Issues past the SLA automatically escalate to Provincial Secretaries.</p>
+                        </div>
+                    </div>
+
+                    <!-- Grid of Department Responsibility Cards -->
+                    <div class="dept-cards-grid" id="departments-cards-grid">
+                        <!-- Populated dynamically by JavaScript -->
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- 5. OFFICER ADMINISTRATIVE PORTAL SECTION (ASSIGNED CONTROLS)   -->
+            <!-- ============================================================== -->
+            <section id="officer-section" class="content-section">
+                <div class="officer-workstation-card">
+                    
+                    <div class="officer-workstation-header">
+                        <div class="header-icon-box">🛡️</div>
+                        <div>
+                            <h3>Municipal Officer Administrative Workstation</h3>
+                            <p>Authorized government engineers can log in to view complaints assigned to their department and execute live status mutations.</p>
+                        </div>
+                    </div>
+
+                    <!-- State A: Officer Login Box (Shown when logged out) -->
+                    <div id="officer-login-box" class="officer-auth-panel">
+                        <div class="officer-auth-inner">
+                            <h4>🏛️ Government Official Authorization</h4>
+                            <p>Enter your departmental email and official security passkey to unlock controls assigned to your jurisdiction.</p>
+
+                            <div class="officer-form-row">
+                                <input type="email" id="officer-email-input" placeholder="officer.khairpur@sepco.com.pk" value="officer.khairpur@sepco.com.pk">
+                                <input type="password" id="officer-passkey-input" placeholder="SEPCO-8812" value="SEPCO-8812">
+                                <button type="button" id="officer-login-btn" class="btn btn-primary">
+                                    Verify & Log In
+                                </button>
+                            </div>
+
+                            <!-- Single Authorized Electricity Officer for Khairpur Mirs -->
+                            <div class="fast-login-chips">
+                                <span>⚡ Authorized Electricity Officer (Khairpur Mirs):</span>
+                                <div class="chips-list">
+                                    <button type="button" class="chip-btn" onclick="quickOfficerLogin('officer.khairpur@sepco.com.pk', 'SEPCO-8812')">
+                                        ⚡ Engr. Farooq Soomro (SDO SEPCO Khairpur — Passkey: SEPCO-8812)
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- State B: Officer Dashboard Panel (Shown when authenticated) -->
+                    <div id="officer-dashboard-panel" class="officer-active-panel" style="display:none;">
+                        
+                        <!-- Official Verified Badge -->
+                        <div class="officer-identity-card">
+                            <div class="officer-badge-seal">
+                                <span>OFFICIAL SEAL</span>
+                                <strong>GOVT OF PAKISTAN</strong>
+                            </div>
+                            <div class="officer-info-text">
+                                <h4 id="active-officer-name">Engr. Abdul Rasheed Soomro</h4>
+                                <p id="active-officer-dept">Public Health Engineering Department</p>
+                                <div class="officer-meta-row">
+                                    <span class="meta-tag">Badge ID: <strong id="active-officer-badge">KHP-9021</strong></span>
+                                    <span class="meta-tag">Assigned Jurisdiction: <strong id="active-officer-city">Khairpur Mirs</strong></span>
+                                    <span class="meta-tag security">Access Level: <strong>Field Administrative Officer</strong></span>
+                                </div>
+                            </div>
+                            <div class="officer-action-top">
+                                <button type="button" id="officer-signout-btn" class="btn btn-sm btn-danger">
+                                    🚪 Logout Officer
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Ticket Action Controls for Assigned Department -->
+                        <div class="ticket-action-box">
+                            <h5>⚡ Action District Grievances</h5>
+                            <p>Showing complaints specifically lodged within your assigned district (<strong id="officer-assigned-city-label">Khairpur Mirs</strong>):</p>
+
+                            <div class="ticket-action-form">
+                                <div class="action-field-group">
+                                    <label for="officer-ticket-select">Select Grievance Ticket:</label>
+                                    <select id="officer-ticket-select">
+                                        <option value="">-- Choose Ticket to Action --</option>
+                                    </select>
+                                </div>
+
+                                <div class="action-field-group">
+                                    <label for="officer-status-select">Set Operational Status:</label>
+                                    <select id="officer-status-select">
+                                        <option value="In Progress">🟡 Set: In Progress (کام جاری ہے / ٹیم روانہ)</option>
+                                        <option value="Resolved">🟢 Set: Resolved (مسئلہ حل ہو گیا / تصدیق مکمل)</option>
+                                        <option value="Pending">🔴 Set: Pending (تحقیقات جاری)</option>
+                                    </select>
+                                </div>
+
+                                <div class="action-field-group">
+                                    <label for="officer-resolution-note">Official Departmental Remarks:</label>
+                                    <input type="text" id="officer-resolution-note" placeholder="e.g. Repair crew dispatched to site, pipeline replacement completed.">
+                                </div>
+
+                                <button type="button" id="execute-status-btn" class="btn btn-success-large">
+                                    💾 Execute Status Mutation
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- 6. CIVIC STATISTICS SECTION (Course Topic: Flexbox & Badges) -->
+            <!-- ============================================================== -->
+            <section id="stats-section" class="content-section">
+                <div class="stats-container-card">
+                    <div class="section-heading">
+                        <h3>Institutional Performance & Civic Statistics</h3>
+                        <p>Real-time metrics demonstrating departmental responsiveness across all 39 districts.</p>
+                    </div>
+
+                    <div class="stats-cards-grid">
+                        <div class="stat-card">
+                            <span class="stat-icon">📑</span>
+                            <strong class="stat-number" id="stat-total">0</strong>
+                            <span class="stat-label">Total Grievances Lodged</span>
+                        </div>
+                        <div class="stat-card stat-green">
+                            <span class="stat-icon">✅</span>
+                            <strong class="stat-number" id="stat-resolved">0</strong>
+                            <span class="stat-label">Resolved & Rectified</span>
+                        </div>
+                        <div class="stat-card stat-yellow">
+                            <span class="stat-icon">⏳</span>
+                            <strong class="stat-number" id="stat-progress">0</strong>
+                            <span class="stat-label">In Progress On-Site</span>
+                        </div>
+                        <div class="stat-card stat-purple">
+                            <span class="stat-icon">🗳️</span>
+                            <strong class="stat-number" id="stat-upvotes">0</strong>
+                            <span class="stat-label">Citizen Upvotes Cast</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- AUTHENTICATION MODAL (Course Topic: DOM Modal & Form Event) -->
+    <!-- ============================================================== -->
+    <div id="auth-modal" class="modal-overlay" style="display:none;">
+        <div class="modal-card">
+            
+            <div class="modal-header">
+                <h4>🔑 MUASHRA Unified Access</h4>
+                <button type="button" class="btn-close-modal" id="close-auth-modal">&times;</button>
+            </div>
+
+            <!-- Tab Switcher -->
+            <div class="modal-tabs">
+                <button type="button" class="tab-btn active" id="tab-signin-btn">Citizen Sign In</button>
+                <button type="button" class="tab-btn" id="tab-signup-btn">Citizen Sign Up</button>
+                <button type="button" class="tab-btn" id="tab-officer-btn">Municipal Officer Login</button>
+            </div>
+
+            <!-- Citizen Sign In Pane -->
+            <div id="citizen-signin-pane" class="tab-pane active">
+                <form id="citizen-signin-form">
+                    <div class="form-field">
+                        <label for="signin-email">Citizen Email Address:</label>
+                        <input type="email" id="signin-email" placeholder="ahmed@citizen.pk" value="ahmed@citizen.pk" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="signin-password">Account Password:</label>
+                        <input type="password" id="signin-password" placeholder="••••••••" value="password123" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Sign In as Citizen</button>
+                    <p class="modal-switch-text">
+                        Don't have an account? <a href="javascript:void(0)" id="switch-to-signup">Create one (Sign Up)</a>
+                    </p>
+                </form>
+            </div>
+
+            <!-- Citizen Sign Up Pane -->
+            <div id="citizen-signup-pane" class="tab-pane" style="display:none;">
+                <form id="citizen-signup-form">
+                    <div class="form-field">
+                        <label for="signup-name">Full Name: <span class="required">*</span></label>
+                        <input type="text" id="signup-name" placeholder="e.g. Ahmed Khan" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="signup-email">Email Address: <span class="required">*</span></label>
+                        <input type="email" id="signup-email" placeholder="e.g. ahmed@citizen.pk" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="signup-password">Choose Password: <span class="required">*</span></label>
+                        <input type="password" id="signup-password" placeholder="Min 6 characters" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="signup-city">District / City: <span class="required">*</span></label>
+                        <select id="signup-city" required>
+                            <!-- Populated with all 39 districts -->
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="signup-phone">Phone / WhatsApp Number:</label>
+                        <input type="text" id="signup-phone" placeholder="0300-1234567">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Create Account & Sign In</button>
+                    <p class="modal-switch-text">
+                        Already have an account? <a href="javascript:void(0)" id="switch-to-signin">Sign In here</a>
+                    </p>
+                </form>
+            </div>
+
+            <!-- Officer Auth Form -->
+            <div id="officer-auth-pane" class="tab-pane" style="display:none;">
+                <form id="officer-modal-form">
+                    <div class="form-field">
+                        <label for="modal-officer-email">Official Departmental Email:</label>
+                        <input type="email" id="modal-officer-email" placeholder="officer.khairpur@sepco.com.pk" value="officer.khairpur@sepco.com.pk" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="modal-officer-passkey">Government Security Passkey:</label>
+                        <input type="password" id="modal-officer-passkey" placeholder="e.g. SEPCO-8812" value="SEPCO-8812" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Authorize Officer Access</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Semantic Footer (Course Topic: <footer>) -->
+    <footer class="main-footer">
+        <div class="footer-inner">
+            <p><strong>MUASHRA (معاشرہ)</strong> &copy; 2026. Web Engineering Semester Course Project.</p>
+            <p>Engineered with Semantic HTML5, Pure CSS3 Flexbox, Vanilla JavaScript DOM, and Fetch API.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Files (Course Topic: External JS, DOM & Fetch) -->
+    <script src="js/gps.js"></script>
+    <script src="js/voice.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

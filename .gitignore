@@ -1,0 +1,15 @@
+# Node dependencies (huge folder, must not be on GitHub)
+node_modules/
+server/node_modules/
+
+# Environment files (Keep secret API keys off GitHub)
+.env
+server/.env
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS specific files
+.DS_Store
+Thumbs.db
