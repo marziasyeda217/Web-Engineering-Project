@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MUASHRA (معاشرہ) - Public Civic Grievance & Municipal Accountability Engine</title>
     
-    <!-- External CSS (Course Topic: External Stylesheet) -->
+    
     <link rel="stylesheet" href="css/style.css">
     
-    <!-- Internal CSS (Course Topic: Internal Stylesheet) -->
+   
     <style>
         .urdu-text {
             font-family: 'Nastaliq', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', serif;
@@ -32,7 +32,6 @@
 </head>
 <body>
 
-    <!-- Top Live Announcement Bar (Course Topic: <header>) -->
     <header class="top-announcement-bar">
         <div class="top-bar-content">
             <div class="top-bar-left">
@@ -47,12 +46,9 @@
         </div>
     </header>
 
-    <!-- App Main Layout (Course Topic: Flexbox Container) -->
+
     <div class="app-layout">
-        
-        <!-- ============================================================== -->
-        <!-- SEMANTIC SIDEBAR (Course Topic: <aside>, <nav>, <ul>, <li>, <a>) -->
-        <!-- ============================================================== -->
+
         <aside class="sidebar">
             
             <!-- Logo & Branding -->
@@ -76,7 +72,6 @@
                 </div>
             </div>
 
-            <!-- Primary Navigation Links (Course Topic: <nav>, <ul>, <li>, <a>) -->
             <nav class="sidebar-nav">
                 <ul>
                     <li>
@@ -118,7 +113,6 @@
                 </ul>
             </nav>
 
-            <!-- Quick Action Buttons in Sidebar -->
             <div class="sidebar-cta-group">
                 <button type="button" id="sidebar-file-btn" class="btn btn-sidebar-primary">
                     <span>➕</span> File a Complaint
@@ -128,7 +122,7 @@
                 </button>
             </div>
 
-            <!-- Sidebar Institutional Badges -->
+
             <div class="sidebar-footer">
                 <p><strong>Departments Connected:</strong></p>
                 <div class="dept-pills">
@@ -145,17 +139,9 @@
             </div>
         </aside>
 
-        <!-- ============================================================== -->
-        <!-- SEMANTIC MAIN CONTENT AREA (Course Topic: <main>) -->
-        <!-- ============================================================== -->
         <main class="main-content">
 
-            <!-- ============================================================== -->
-            <!-- 1. OVERVIEW & AIM SECTION (Course Topic: <section>, <article>, <img>) -->
-            <!-- ============================================================== -->
             <section id="overview-section" class="content-section">
-                
-                <!-- Hero Banner Card -->
                 <div class="hero-card">
                     <div class="hero-text-side">
                         <span class="hero-chip">MUASHRA CIVIC ENTERPRISE</span>
@@ -176,7 +162,6 @@
                         </div>
                     </div>
 
-                    <!-- Authentic Project Image Showcase (Course Topic: <img>) -->
                     <div class="hero-media-side">
                         <div class="image-gallery-card">
                             <img src="images/pakistan_flag.jpg" alt="Pakistan Civic Governance" class="gallery-img active">
@@ -187,8 +172,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Mission & Goals Grid (Course Topic: <article>, Flexbox) -->
                 <div class="mission-section">
                     <div class="section-heading">
                         <h3>Bridging Citizens & Municipal Infrastructure</h3>
@@ -231,7 +214,6 @@
                     </div>
                 </div>
 
-                <!-- 4 Steps Explanation (Course Topic: <ol>, <li>) -->
                 <div class="steps-wrapper">
                     <div class="section-heading">
                         <h3>How MUASHRA Works in 4 Simple Steps</h3>
@@ -262,9 +244,6 @@
 
             </section>
 
-            <!-- ============================================================== -->
-            <!-- 2. FILE A COMPLAINT SECTION (Course Topic: <form>, input, select) -->
-            <!-- ============================================================== -->
             <section id="report-section" class="content-section">
                 <div class="form-card-container">
                     
@@ -284,8 +263,7 @@
                     </div>
 
                     <form id="complaint-form" novalidate>
-                        
-                        <!-- Feedback Banner (Course Topic: DOM InnerHTML updates) -->
+            
                         <div id="form-feedback" class="feedback-banner" style="display:none;"></div>
 
                         <!-- Reporter Info Row -->
@@ -299,8 +277,6 @@
                                 <input type="text" id="citizen-phone" name="citizenPhone" placeholder="0300-1234567">
                             </div>
                         </div>
-
-                        <!-- Voice Recorder Box (Course Topic: <audio> tag) -->
                         <div class="voice-recording-card">
                             <div class="voice-action-row">
                                 <button type="button" id="record-btn" class="btn btn-voice">
@@ -312,11 +288,10 @@
                             <p class="voice-help-text">
                                 💡 Tip: Click button and speak naturally (e.g. <em>"Humare mohallay mein paani ki line phat gayi hai"</em> or <em>"Bijli ka transformer jal gaya hai"</em>).
                             </p>
-                            <!-- Audio Preview Element (Course Topic: <audio>) -->
                             <audio id="audio-preview" controls style="display:none; width: 100%; margin-top: 10px;"></audio>
                         </div>
 
-                        <!-- Grievance Description -->
+
                         <div class="form-field">
                             <label for="description">Grievance Description (مسئلہ کی تفصیل): <span class="required">*</span></label>
                             <textarea id="description" name="description" rows="3" placeholder="Speak or describe the civic defect, leakage, road hazard, or load shedding problem here..." required></textarea>
@@ -426,9 +401,6 @@
                 </div>
             </section>
 
-            <!-- ============================================================== -->
-            <!-- 3. NEIGHBORHOOD FEED SECTION (Course Topic: <table>, filter) -->
-            <!-- ============================================================== -->
             <section id="feed-section" class="content-section">
                 <div class="feed-card-container">
                     
@@ -535,9 +507,6 @@
                 </div>
             </section>
 
-            <!-- ============================================================== -->
-            <!-- 5. OFFICER ADMINISTRATIVE PORTAL SECTION (ASSIGNED CONTROLS)   -->
-            <!-- ============================================================== -->
             <section id="officer-section" class="content-section">
                 <div class="officer-workstation-card">
                     
@@ -563,12 +532,21 @@
                                 </button>
                             </div>
 
-                            <!-- Single Authorized Electricity Officer for Khairpur Mirs -->
+                            <!-- Official Departmental Test Accounts for Khairpur Mirs -->
                             <div class="fast-login-chips">
-                                <span>⚡ Authorized Electricity Officer (Khairpur Mirs):</span>
+                                <span>🏛️ Departmental Test Officers (Khairpur Mirs):</span>
                                 <div class="chips-list">
                                     <button type="button" class="chip-btn" onclick="quickOfficerLogin('officer.khairpur@sepco.com.pk', 'SEPCO-8812')">
-                                        ⚡ Engr. Farooq Soomro (SDO SEPCO Khairpur — Passkey: SEPCO-8812)
+                                        ⚡ SEPCO Electricity: Engr. Farooq Soomro (SEPCO-8812)
+                                    </button>
+                                    <button type="button" class="chip-btn" onclick="quickOfficerLogin('officer.phed@sindh.gov.pk', 'PHED-5521')">
+                                        💧 PHED Water/Health: Engr. Tariq Memon (PHED-5521)
+                                    </button>
+                                    <button type="button" class="chip-btn" onclick="quickOfficerLogin('officer.khairpur@ssgc.com.pk', 'SSGC-4410')">
+                                        🔥 SSGC Sui Gas: Engr. Naveed Abbasi (SSGC-4410)
+                                    </button>
+                                    <button type="button" class="chip-btn" onclick="quickOfficerLogin('admin.khairpur@sindh.gov.pk', 'ADMIN-9000')" style="background-color: #ecfdf5; border-color: #059669; color: #065f46; font-weight: bold;">
+                                        🏛️ DC Administration: Syed Zulfiqar Shah (ADMIN-9000 — All Depts)
                                     </button>
                                 </div>
                             </div>
@@ -677,7 +655,7 @@
     </div>
 
     <!-- ============================================================== -->
-    <!-- AUTHENTICATION MODAL (Course Topic: DOM Modal & Form Event) -->
+    <!-- AUTHENTICATION -->
     <!-- ============================================================== -->
     <div id="auth-modal" class="modal-overlay" style="display:none;">
         <div class="modal-card">
@@ -706,6 +684,19 @@
                         <input type="password" id="signin-password" placeholder="••••••••" value="password123" required>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Sign In as Citizen</button>
+                    
+                    <div class="fast-login-chips" style="margin-top: 14px;">
+                        <span>👥 Quick Switch Citizen Accounts (Test Voting):</span>
+                        <div class="chips-list">
+                            <button type="button" class="chip-btn" onclick="document.getElementById('signin-email').value='ahmed@citizen.pk'; document.getElementById('signin-password').value='password123';">
+                                👤 Citizen 1: Ahmed Khan
+                            </button>
+                            <button type="button" class="chip-btn" onclick="document.getElementById('signin-email').value='zainab@citizen.pk'; document.getElementById('signin-password').value='password123';">
+                                👤 Citizen 2: Zainab Bibi
+                            </button>
+                        </div>
+                    </div>
+
                     <p class="modal-switch-text">
                         Don't have an account? <a href="javascript:void(0)" id="switch-to-signup">Create one (Sign Up)</a>
                     </p>
@@ -762,15 +753,12 @@
         </div>
     </div>
 
-    <!-- Semantic Footer (Course Topic: <footer>) -->
     <footer class="main-footer">
         <div class="footer-inner">
             <p><strong>MUASHRA (معاشرہ)</strong> &copy; 2026. Web Engineering Semester Course Project.</p>
             <p>Engineered with Semantic HTML5, Pure CSS3 Flexbox, Vanilla JavaScript DOM, and Fetch API.</p>
         </div>
     </footer>
-
-    <!-- JavaScript Files (Course Topic: External JS, DOM & Fetch) -->
     <script src="js/gps.js"></script>
     <script src="js/voice.js"></script>
     <script src="js/api.js"></script>

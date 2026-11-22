@@ -661,6 +661,11 @@ async function loadAndDisplayComplaints() {
     renderDepartmentMatrix();
 }
 
+// Clean up old buggy global vote key from browser storage
+try {
+    localStorage.removeItem('muashra_voted_tickets');
+} catch (e) {}
+
 function getVoterId() {
     if (currentUser && (currentUser.id || currentUser.email)) {
         return currentUser.id || currentUser.email;
@@ -673,21 +678,88 @@ function getVoterId() {
     return guestVoter;
 }
 
+function getVoterKey() {
+    return 'muashra_voted_' + getVoterId();
+}
+
 function hasVotedOn(item) {
+    if (!item || !item.id) return false;
     const voterId = getVoterId();
-    if (item.voters && Array.isArray(item.voters) && item.voters.includes(voterId)) {
-        return true;
+
+    // 1. Check if backend returned voters array with this voterId
+    if (item.voters && Array.isArray(item.voters)) {
+        if (item.voters.includes(voterId)) return true;
     }
-    const votedList = JSON.parse(localStorage.getItem('muashra_voted_tickets') || '[]');
-    return votedList.includes(item.id);
+
+    // 2. Check current user's personal vote registry in localStorage
+    try {
+        const userVotedList = JSON.parse(localStorage.getItem(getVoterKey()) || '[]');
+        return userVotedList.includes(item.id);
+    } catch (e) {
+        return false;
+    }
 }
 
 function recordLocalVote(ticketId) {
-    const votedList = JSON.parse(localStorage.getItem('muashra_voted_tickets') || '[]');
-    if (!votedList.includes(ticketId)) {
-        votedList.push(ticketId);
-        localStorage.setItem('muashra_voted_tickets', JSON.stringify(votedList));
+    try {
+        const key = getVoterKey();
+        const userVotedList = JSON.parse(localStorage.getItem(key) || '[]');
+        if (!userVotedList.includes(ticketId)) {
+            userVotedList.push(ticketId);
+            localStorage.setItem(key, JSON.stringify(userVotedList));
+        }
+    } catch (e) {}
+}
+
+// Departmental Role-Based Access Control (RBAC) Verifier
+function canOfficerActionComplaint(officer, complaint) {
+    if (!officer || officer.role !== 'officer' || !complaint) return false;
+
+    // 1. City / District check
+    const officerCity = (officer.city || '').toLowerCase().trim();
+    const complaintCity = (complaint.city || '').toLowerCase().trim();
+    const isCityMatch = complaintCity.includes(officerCity) || 
+                        officerCity.includes(complaintCity) || 
+                        officerCity === 'all' || 
+                        officerCity === 'pakistan';
+    if (!isCityMatch) return false;
+
+    // 2. Department Jurisdiction Check (RBAC)
+    const officerDept = (officer.department || '').toLowerCase().trim();
+    const complaintDept = (complaint.department || '').toLowerCase().trim();
+    const complaintCat = (complaint.category || '').toLowerCase().trim();
+
+    // DC / Assistant Commissioner / Municipal Administration has executive authority over ALL departments
+    if (officerDept.includes('municipal administration') || 
+        officerDept.includes('town committee') || 
+        officerDept.includes('district commissioner') || 
+        officerDept.includes('dc office') ||
+        (officer.badgeId || '').toUpperCase() === 'ADMIN-9000') {
+        return true;
     }
+
+    // Direct department match
+    if (complaintDept && officerDept && (complaintDept.includes(officerDept) || officerDept.includes(complaintDept))) {
+        return true;
+    }
+
+    // Electricity & Power / SEPCO
+    if (officerDept.includes('sepco') && (complaintDept.includes('sepco') || complaintCat.includes('electricity') || complaintCat.includes('power'))) {
+        return true;
+    }
+
+    // Water & Public Health / PHED
+    if ((officerDept.includes('public health') || officerDept.includes('phed')) && 
+        (complaintDept.includes('public health') || complaintDept.includes('phed') || complaintCat.includes('water') || complaintCat.includes('sanitation'))) {
+        return true;
+    }
+
+    // Sui Gas / SSGC
+    if (officerDept.includes('ssgc') && (complaintDept.includes('ssgc') || complaintCat.includes('gas') || complaintCat.includes('pipeline'))) {
+        return true;
+    }
+
+    return false;
 }
 
 function renderComplaintsTable(complaintsList) {
@@ -802,13 +874,11 @@ function renderComplaintsTable(complaintsList) {
         }
         tdAction.appendChild(intensifyBtn);
 
-        // Inline Officer Controls: ONLY if current officer is assigned to THIS complaint's district!
+        // Inline Officer Controls: RBAC check for District AND Department
         if (currentUser && currentUser.role === 'officer') {
-            const officerCity = (currentUser.city || '').toLowerCase();
-            const complaintCity = (item.city || '').toLowerCase();
-            const isOfficerDistrict = complaintCity.includes(officerCity) || officerCity.includes(complaintCity) || officerCity === 'all' || officerCity === 'pakistan';
+            const canAction = canOfficerActionComplaint(currentUser, item);
 
-            if (isOfficerDistrict) {
+            if (canAction) {
                 const officerControls = document.createElement('div');
                 officerControls.className = 'officer-inline-controls';
 
@@ -816,9 +886,9 @@ function renderComplaintsTable(complaintsList) {
                     const btnProg = document.createElement('button');
                     btnProg.className = 'btn-officer-progress';
                     btnProg.textContent = 'In Progress';
-                    btnProg.title = `Mark In Progress for ${currentUser.city} district`;
+                    btnProg.title = `Mark In Progress for ${currentUser.department}`;
                     btnProg.addEventListener('click', async function () {
-                        await apiUpdateStatus(item.id, 'In Progress', `Field team dispatched by ${currentUser.name} (${currentUser.city})`, currentUser.name);
+                        await apiUpdateStatus(item.id, 'In Progress', `Field team dispatched by ${currentUser.name} (${currentUser.department})`, currentUser.name);
                         await loadAndDisplayComplaints();
                     });
                     officerControls.appendChild(btnProg);
@@ -828,15 +898,23 @@ function renderComplaintsTable(complaintsList) {
                     const btnRes = document.createElement('button');
                     btnRes.className = 'btn-officer-resolve';
                     btnRes.textContent = 'Resolve';
-                    btnRes.title = `Mark Resolved for ${currentUser.city} district`;
+                    btnRes.title = `Mark Resolved by ${currentUser.department}`;
                     btnRes.addEventListener('click', async function () {
-                        await apiUpdateStatus(item.id, 'Resolved', `Issue verified & resolved by ${currentUser.name} (${currentUser.city})`, currentUser.name);
+                        await apiUpdateStatus(item.id, 'Resolved', `Issue verified & resolved by ${currentUser.name} (${currentUser.department})`, currentUser.name);
                         await loadAndDisplayComplaints();
                     });
                     officerControls.appendChild(btnRes);
                 }
 
                 tdAction.appendChild(officerControls);
+            } else {
+                // Informative RBAC Badge showing why this officer cannot action this ticket
+                const lockedBadge = document.createElement('span');
+                lockedBadge.className = 'badge-jurisdiction-locked';
+                const deptShort = (item.department || 'Other Dept').split('(')[0].trim();
+                lockedBadge.innerHTML = `🔒 ${deptShort}`;
+                lockedBadge.title = `Action Restricted: This ticket is assigned to ${item.department}. Only officers from that department or DC Administration can resolve it.`;
+                tdAction.appendChild(lockedBadge);
             }
         }
 
@@ -950,14 +1028,10 @@ function populateOfficerTickets() {
 
     ticketSelect.innerHTML = '<option value="">-- Choose Ticket to Action --</option>';
 
-    // Filter tickets: Officer sees complaints of their assigned DISTRICT!
+    // Filter tickets: Officer sees complaints of their assigned Department & District!
     let assignedTickets = [];
     if (currentUser && currentUser.role === 'officer') {
-        const officerCity = (currentUser.city || '').toLowerCase();
-        assignedTickets = allComplaints.filter(c => {
-            const complaintCity = (c.city || '').toLowerCase();
-            return complaintCity.includes(officerCity) || officerCity.includes(complaintCity) || officerCity === 'all' || officerCity === 'pakistan';
-        });
+        assignedTickets = allComplaints.filter(c => canOfficerActionComplaint(currentUser, c));
     } else {
         assignedTickets = allComplaints;
     }
@@ -965,7 +1039,9 @@ function populateOfficerTickets() {
     if (assignedTickets.length === 0) {
         const opt = document.createElement('option');
         opt.value = "";
-        opt.textContent = `-- No complaints registered in your district (${currentUser?.city || 'Selected'}) yet --`;
+        const deptLabel = currentUser ? (currentUser.department || 'your department') : 'your department';
+        const cityLabel = currentUser ? (currentUser.city || 'your area') : 'your area';
+        opt.textContent = `-- No pending complaints assigned to ${deptLabel} in ${cityLabel} --`;
         ticketSelect.appendChild(opt);
         return;
     }

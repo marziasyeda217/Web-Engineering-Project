@@ -191,15 +191,60 @@ function getUsers() {
                 },
                 {
                     id: 'usr-102',
+                    name: 'Zainab Bibi',
+                    email: 'zainab@citizen.pk',
+                    password: 'password123',
+                    role: 'citizen',
+                    city: 'Khairpur Mirs',
+                    phone: '0301-9876543'
+                },
+                {
+                    id: 'usr-103',
                     name: 'Engr. Farooq Soomro',
                     email: 'officer.khairpur@sepco.com.pk',
                     password: 'OfficerPass2026!',
                     role: 'officer',
                     department: 'Sukkur Electric Power Company (SEPCO)',
-                    designation: 'Sub-Divisional Officer (SDO) - Khairpur Sub-Division',
+                    designation: 'Sub-Divisional Officer (SDO) - SEPCO Khairpur',
                     badgeId: 'SEPCO-8812',
                     city: 'Khairpur Mirs',
                     phone: '0243-920150'
+                },
+                {
+                    id: 'usr-104',
+                    name: 'Engr. Tariq Memon',
+                    email: 'officer.phed@sindh.gov.pk',
+                    password: 'OfficerPass2026!',
+                    role: 'officer',
+                    department: 'Public Health Engineering Department',
+                    designation: 'Executive Engineer (XEN) - Public Health & Sanitation Khairpur',
+                    badgeId: 'PHED-5521',
+                    city: 'Khairpur Mirs',
+                    phone: '0243-920155'
+                },
+                {
+                    id: 'usr-105',
+                    name: 'Engr. Naveed Abbasi',
+                    email: 'officer.khairpur@ssgc.com.pk',
+                    password: 'OfficerPass2026!',
+                    role: 'officer',
+                    department: 'Sui Southern Gas Company (SSGC)',
+                    designation: 'In-charge Distribution - SSGC Khairpur',
+                    badgeId: 'SSGC-4410',
+                    city: 'Khairpur Mirs',
+                    phone: '0243-920160'
+                },
+                {
+                    id: 'usr-106',
+                    name: 'Syed Zulfiqar Shah',
+                    email: 'admin.khairpur@sindh.gov.pk',
+                    password: 'OfficerPass2026!',
+                    role: 'officer',
+                    department: 'Local Municipal Administration & Town Committee',
+                    designation: 'Assistant Commissioner / Municipal Officer - Khairpur (All Departments Oversight)',
+                    badgeId: 'ADMIN-9000',
+                    city: 'Khairpur Mirs',
+                    phone: '0243-920100'
                 }
             ];
             fs.writeFileSync(USERS_FILE, JSON.stringify(defaultUsers, null, 2), 'utf8');
@@ -309,7 +354,7 @@ app.get('/api/auth/officers', (req, res) => {
 
 // 1. GET /api/complaints - Retrieve all complaints
 app.get('/api/complaints', async (req, res) => {
-    // 1. Try Supabase
+    // 1. Try Supabase Cloud Database
     if (SUPABASE_URL && SUPABASE_KEY) {
         try {
             const sbRes = await fetch(`${SUPABASE_URL}/rest/v1/complaints?select=*&order=created_at.desc`, {
@@ -321,18 +366,27 @@ app.get('/api/complaints', async (req, res) => {
             if (sbRes.ok) {
                 const data = await sbRes.json();
                 if (Array.isArray(data)) {
+                    // CRITICAL: Mirror database into server/complaints.json so JSON file stays 100% in sync!
+                    const local = getLocalComplaints();
+                    data.forEach(dbItem => {
+                        const localItem = local.find(l => l.id === dbItem.id);
+                        if (localItem && Array.isArray(localItem.voters)) {
+                            dbItem.voters = Array.from(new Set([...(dbItem.voters || []), ...localItem.voters]));
+                        }
+                    });
+                    saveLocalComplaints(data);
                     return res.json({ success: true, source: 'supabase', data });
                 }
             }
         } catch (e) {}
     }
 
-    // 2. Local Fallback
+    // 2. Local Fallback from complaints.json
     const local = getLocalComplaints();
     res.json({ success: true, source: 'local', data: local });
 });
 
-// 2. POST /api/complaints - Create a new complaint
+// 2. POST /api/complaints - Create a new complaint (Guarantees write to BOTH JSON & Supabase)
 app.post('/api/complaints', async (req, res) => {
     const body = req.body;
     const newComplaint = {
@@ -351,13 +405,24 @@ app.post('/api/complaints', async (req, res) => {
         latitude: body.latitude || 27.5110,
         longitude: body.longitude || 68.7416,
         citizen_name: body.citizen_name || 'Verified Citizen',
+        voters: body.voterId ? [body.voterId] : [],
         created_at: new Date().toISOString()
     };
 
-    // 1. Try Supabase insert
+    // 1. GUARANTEED WRITE TO server/complaints.json FIRST
+    const list = getLocalComplaints();
+    const existingIdx = list.findIndex(c => c.id === newComplaint.id);
+    if (existingIdx >= 0) {
+        list[existingIdx] = newComplaint;
+    } else {
+        list.unshift(newComplaint);
+    }
+    saveLocalComplaints(list);
+
+    // 2. ALSO WRITE TO SUPABASE CLOUD DATABASE
     if (SUPABASE_URL && SUPABASE_KEY) {
         try {
-            const sbRes = await fetch(`${SUPABASE_URL}/rest/v1/complaints`, {
+            await fetch(`${SUPABASE_URL}/rest/v1/complaints`, {
                 method: 'POST',
                 headers: {
                     'apikey': SUPABASE_KEY,
@@ -367,21 +432,27 @@ app.post('/api/complaints', async (req, res) => {
                 },
                 body: JSON.stringify(newComplaint)
             });
-            if (sbRes.ok) {
-                const inserted = await sbRes.json();
-                const list = getLocalComplaints();
-                list.unshift(inserted[0] || newComplaint);
-                saveLocalComplaints(list);
-                return res.status(201).json({ success: true, source: 'supabase', data: inserted[0] || newComplaint });
-            }
         } catch (e) {}
     }
 
-    // 2. Local save
+    res.status(201).json({ success: true, data: newComplaint });
+});
+
+// POST /api/complaints/sync - Dual sync endpoint from frontend
+app.post('/api/complaints/sync', (req, res) => {
+    const complaint = req.body;
+    if (!complaint || !complaint.id) {
+        return res.status(400).json({ success: false, message: 'Invalid payload' });
+    }
     const list = getLocalComplaints();
-    list.unshift(newComplaint);
+    const idx = list.findIndex(c => c.id === complaint.id);
+    if (idx >= 0) {
+        list[idx] = { ...list[idx], ...complaint };
+    } else {
+        list.unshift(complaint);
+    }
     saveLocalComplaints(list);
-    res.status(201).json({ success: true, source: 'local', data: newComplaint });
+    res.json({ success: true, message: 'Mirrored to server/complaints.json' });
 });
 
 // 3. POST /api/complaints/:id/upvote - Upvote / Intensify (+1 with 1 vote limit per citizen)

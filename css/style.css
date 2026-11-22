@@ -1859,3 +1859,16 @@ nav.sidebar-nav ul li a.nav-item.active {
     font-weight: 800;
     cursor: pointer;
 }
+
+.badge-jurisdiction-locked {
+    display: inline-block;
+    background-color: #f8fafc;
+    color: #64748b;
+    border: 1px dashed #cbd5e1;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 6px;
+    border-radius: 4px;
+    margin-top: 5px;
+    cursor: not-allowed;
+}

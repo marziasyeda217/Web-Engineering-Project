@@ -11,15 +11,64 @@
   },
   {
     "id": "usr-102",
+    "name": "Zainab Bibi",
+    "email": "zainab@citizen.pk",
+    "password": "password123",
+    "role": "citizen",
+    "city": "Khairpur Mirs",
+    "phone": "0301-9876543",
+    "createdAt": "2026-08-26T10:00:00.000Z"
+  },
+  {
+    "id": "usr-103",
     "name": "Engr. Farooq Soomro",
     "email": "officer.khairpur@sepco.com.pk",
     "password": "OfficerPass2026!",
     "role": "officer",
     "department": "Sukkur Electric Power Company (SEPCO)",
-    "designation": "Sub-Divisional Officer (SDO) - Khairpur Sub-Division",
+    "designation": "Sub-Divisional Officer (SDO) - SEPCO Khairpur",
     "badgeId": "SEPCO-8812",
     "city": "Khairpur Mirs",
     "phone": "0243-920150",
     "createdAt": "2026-08-20T10:00:00.000Z"
+  },
+  {
+    "id": "usr-104",
+    "name": "Engr. Tariq Memon",
+    "email": "officer.phed@sindh.gov.pk",
+    "password": "OfficerPass2026!",
+    "role": "officer",
+    "department": "Public Health Engineering Department",
+    "designation": "Executive Engineer (XEN) - Public Health & Sanitation Khairpur",
+    "badgeId": "PHED-5521",
+    "city": "Khairpur Mirs",
+    "phone": "0243-920155",
+    "createdAt": "2026-08-21T10:00:00.000Z"
+  },
+  {
+    "id": "usr-105",
+    "name": "Engr. Naveed Abbasi",
+    "email": "officer.khairpur@ssgc.com.pk",
+    "password": "OfficerPass2026!",
+    "role": "officer",
+    "department": "Sui Southern Gas Company (SSGC)",
+    "designation": "In-charge Distribution - SSGC Khairpur",
+    "badgeId": "SSGC-4410",
+    "city": "Khairpur Mirs",
+    "phone": "0243-920160",
+    "createdAt": "2026-08-22T10:00:00.000Z"
+  },
+  {
+    "id": "usr-106",
+    "name": "Syed Zulfiqar Shah",
+    "email": "admin.khairpur@sindh.gov.pk",
+    "password": "OfficerPass2026!",
+    "role": "officer",
+    "department": "Local Municipal Administration & Town Committee",
+    "designation": "Assistant Commissioner / Municipal Officer - Khairpur (All Departments Oversight)",
+    "badgeId": "ADMIN-9000",
+    "city": "Khairpur Mirs",
+    "phone": "0243-920100",
+    "createdAt": "2026-08-23T10:00:00.000Z"
   }
 ]

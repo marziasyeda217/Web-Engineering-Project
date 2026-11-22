@@ -4,7 +4,10 @@
 // Supports: Node.js Backend -> Supabase Cloud Database -> Local Fallback
 // ==============================================================
 
-const API_BASE = '/api';
+// Support both direct http://localhost:5000 execution and file:/// or live-server testing
+const API_BASE = (window.location.protocol === 'file:' || (window.location.port !== '5000' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')))
+    ? 'http://localhost:5000/api'
+    : '/api';
 
 // Supabase Cloud Configuration
 const SUPABASE_URL = "https://syyyuwugegbtbuxanxtu.supabase.co";
@@ -226,15 +229,15 @@ async function apiLogin(credentials) {
     const pass = (credentials.passkey || '').trim().toUpperCase();
     const email = (credentials.email || '').trim().toLowerCase();
 
-    // Officer Passkey matching (Single Khairpur Electricity Officer - SEPCO)
+    // 1. Electricity Officer (SEPCO)
     if (pass === 'SEPCO-8812' || pass === 'SEPCO' || pass === 'KHP-SEPCO' || email.includes('sepco')) {
         const user = {
-            id: 'usr-102',
+            id: 'usr-103',
             name: 'Engr. Farooq Soomro',
             email: 'officer.khairpur@sepco.com.pk',
             role: 'officer',
             department: 'Sukkur Electric Power Company (SEPCO)',
-            designation: 'Sub-Divisional Officer (SDO) - Khairpur Sub-Division',
+            designation: 'Sub-Divisional Officer (SDO) - SEPCO Khairpur',
             badgeId: 'SEPCO-8812',
             city: 'Khairpur Mirs'
         };
@@ -242,12 +245,88 @@ async function apiLogin(credentials) {
         return { success: true, user };
     }
 
-    // Citizen Demo Login
-    if (email === 'ahmed@citizen.pk' || email.includes('citizen') || credentials.name) {
+    // 2. Water & Public Health Officer (PHED)
+    if (pass === 'PHED-5521' || pass === 'PHED' || email.includes('phed')) {
+        const user = {
+            id: 'usr-104',
+            name: 'Engr. Tariq Memon',
+            email: 'officer.phed@sindh.gov.pk',
+            role: 'officer',
+            department: 'Public Health Engineering Department',
+            designation: 'Executive Engineer (XEN) - Public Health & Sanitation Khairpur',
+            badgeId: 'PHED-5521',
+            city: 'Khairpur Mirs'
+        };
+        localStorage.setItem('muashra_user', JSON.stringify(user));
+        return { success: true, user };
+    }
+
+    // 3. Sui Gas Officer (SSGC)
+    if (pass === 'SSGC-4410' || pass === 'SSGC' || email.includes('ssgc')) {
+        const user = {
+            id: 'usr-105',
+            name: 'Engr. Naveed Abbasi',
+            email: 'officer.khairpur@ssgc.com.pk',
+            role: 'officer',
+            department: 'Sui Southern Gas Company (SSGC)',
+            designation: 'In-charge Distribution - SSGC Khairpur',
+            badgeId: 'SSGC-4410',
+            city: 'Khairpur Mirs'
+        };
+        localStorage.setItem('muashra_user', JSON.stringify(user));
+        return { success: true, user };
+    }
+
+    // 4. District Administration & Municipal Oversight (DC Office / All Departments)
+    if (pass === 'ADMIN-9000' || pass === 'ADMIN' || pass === 'DC-KHP' || email.includes('admin.khairpur')) {
+        const user = {
+            id: 'usr-106',
+            name: 'Syed Zulfiqar Shah',
+            email: 'admin.khairpur@sindh.gov.pk',
+            role: 'officer',
+            department: 'Local Municipal Administration & Town Committee',
+            designation: 'Assistant Commissioner / Municipal Officer - Khairpur (All Departments Oversight)',
+            badgeId: 'ADMIN-9000',
+            city: 'Khairpur Mirs'
+        };
+        localStorage.setItem('muashra_user', JSON.stringify(user));
+        return { success: true, user };
+    }
+
+    // Citizen Demo 1: Ahmed Khan
+    if (email === 'ahmed@citizen.pk') {
         const user = {
             id: 'usr-101',
-            name: credentials.name || 'Ahmed Khan',
-            email: email || 'ahmed@citizen.pk',
+            name: 'Ahmed Khan',
+            email: 'ahmed@citizen.pk',
+            role: 'citizen',
+            city: credentials.city || 'Khairpur Mirs',
+            phone: '0300-1234567'
+        };
+        localStorage.setItem('muashra_user', JSON.stringify(user));
+        return { success: true, user };
+    }
+
+    // Citizen Demo 2: Zainab Bibi
+    if (email === 'zainab@citizen.pk') {
+        const user = {
+            id: 'usr-102',
+            name: 'Zainab Bibi',
+            email: 'zainab@citizen.pk',
+            role: 'citizen',
+            city: credentials.city || 'Khairpur Mirs',
+            phone: '0301-9876543'
+        };
+        localStorage.setItem('muashra_user', JSON.stringify(user));
+        return { success: true, user };
+    }
+
+    // Generic Citizen Login
+    if (email.includes('citizen') || credentials.name) {
+        const user = {
+            id: 'usr-' + Math.floor(1000 + Math.random() * 9000),
+            name: credentials.name || 'Citizen',
+            email: email || 'citizen@muashra.pk',
             role: 'citizen',
             city: credentials.city || 'Khairpur Mirs',
             phone: '0300-1234567'
@@ -381,7 +460,16 @@ async function apiCreateComplaint(complaintData) {
         });
         if (sbResponse.ok) {
             const data = await sbResponse.json();
-            return { success: true, data: data[0] || newRecord };
+            const created = data[0] || newRecord;
+            // Mirror to Node.js server to ensure server/complaints.json receives it!
+            try {
+                fetch(`${API_BASE}/complaints/sync`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(created)
+                }).catch(() => {});
+            } catch (e) {}
+            return { success: true, data: created };
         }
     } catch (e) {}
 

@@ -65,10 +65,17 @@ USING (true) WITH CHECK (true);
 GRANT ALL ON TABLE public.users TO anon, authenticated, service_role;
 GRANT ALL ON TABLE public.complaints TO anon, authenticated, service_role;
 
--- 7. Insert Default Citizens and Khairpur Electricity Officer
+-- 7. Ensure voters column exists in complaints
+ALTER TABLE public.complaints ADD COLUMN IF NOT EXISTS voters JSONB DEFAULT '[]'::jsonb;
+
+-- 8. Insert Default Citizens and Khairpur Sector Officers
 INSERT INTO public.users (id, name, email, password, role, department, designation, badge_id, city, phone)
 VALUES 
 ('usr-101', 'Ahmed Khan', 'ahmed@citizen.pk', 'password123', 'citizen', NULL, NULL, NULL, 'Khairpur Mirs', '0300-1234567'),
-('usr-102', 'Engr. Farooq Soomro', 'officer.khairpur@sepco.com.pk', 'OfficerPass2026!', 'officer', 'Sukkur Electric Power Company (SEPCO)', 'Sub-Divisional Officer (SDO) - Khairpur Sub-Division', 'SEPCO-8812', 'Khairpur Mirs', '0243-920150')
+('usr-102', 'Zainab Bibi', 'zainab@citizen.pk', 'password123', 'citizen', NULL, NULL, NULL, 'Khairpur Mirs', '0301-9876543'),
+('usr-103', 'Engr. Farooq Soomro', 'officer.khairpur@sepco.com.pk', 'OfficerPass2026!', 'officer', 'Sukkur Electric Power Company (SEPCO)', 'Sub-Divisional Officer (SDO) - SEPCO Khairpur', 'SEPCO-8812', 'Khairpur Mirs', '0243-920150'),
+('usr-104', 'Engr. Tariq Memon', 'officer.phed@sindh.gov.pk', 'OfficerPass2026!', 'officer', 'Public Health Engineering Department', 'Executive Engineer (XEN) - Public Health & Sanitation Khairpur', 'PHED-5521', 'Khairpur Mirs', '0243-920155'),
+('usr-105', 'Engr. Naveed Abbasi', 'officer.khairpur@ssgc.com.pk', 'OfficerPass2026!', 'officer', 'Sui Southern Gas Company (SSGC)', 'In-charge Distribution - SSGC Khairpur', 'SSGC-4410', 'Khairpur Mirs', '0243-920160'),
+('usr-106', 'Syed Zulfiqar Shah', 'admin.khairpur@sindh.gov.pk', 'OfficerPass2026!', 'officer', 'Local Municipal Administration & Town Committee', 'Assistant Commissioner / Municipal Officer - Khairpur (All Departments Oversight)', 'ADMIN-9000', 'Khairpur Mirs', '0243-920100')
 ON CONFLICT (id) DO UPDATE 
-SET name = EXCLUDED.name, email = EXCLUDED.email, badge_id = EXCLUDED.badge_id, department = EXCLUDED.department, city = EXCLUDED.city;
+SET name = EXCLUDED.name, email = EXCLUDED.email, badge_id = EXCLUDED.badge_id, department = EXCLUDED.department, designation = EXCLUDED.designation, city = EXCLUDED.city;
