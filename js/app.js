@@ -1,12 +1,4 @@
-// ==============================================================
-// MUASHRA - Main Application Controller for Web Engineering Course
-// Covers: Variables (var, let, const), Operators, Conditionals,
-//         Loops (for, while, do-while), Array methods, Arrow functions,
-//         DOM methods (getElementById, querySelector, createElement, appendChild),
-//         Objects, JSON, and Native Fetch API.
-// ==============================================================
 
-// Global Application State (Course Topic: let, const, var declarations)
 let allComplaints = [];
 let currentUser = null;
 let sortByVotesActive = false;

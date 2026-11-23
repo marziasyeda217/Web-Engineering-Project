@@ -15,6 +15,16 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware (Course Topic: Handling JSON & Static Frontend Assets)
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, apikey');
+    res.setHeader('Access-Control-Allow-Private-Network', 'true');
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(204);
+    }
+    next();
+});
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../')));
@@ -422,6 +432,8 @@ app.post('/api/complaints', async (req, res) => {
     // 2. ALSO WRITE TO SUPABASE CLOUD DATABASE
     if (SUPABASE_URL && SUPABASE_KEY) {
         try {
+            // Strip voters array before sending to Supabase because voters is not in Supabase table schema
+            const { voters, ...supabasePayload } = newComplaint;
             await fetch(`${SUPABASE_URL}/rest/v1/complaints`, {
                 method: 'POST',
                 headers: {
@@ -430,7 +442,7 @@ app.post('/api/complaints', async (req, res) => {
                     'Content-Type': 'application/json',
                     'Prefer': 'return=representation'
                 },
-                body: JSON.stringify(newComplaint)
+                body: JSON.stringify(supabasePayload)
             });
         } catch (e) {}
     }

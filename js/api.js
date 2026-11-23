@@ -5,7 +5,7 @@
 // ==============================================================
 
 // Support both direct http://localhost:5000 execution and file:/// or live-server testing
-const API_BASE = (window.location.protocol === 'file:' || (window.location.port !== '5000' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')))
+const API_BASE = (window.location.protocol === 'file:' || !window.location.port || window.location.port !== '5000')
     ? 'http://localhost:5000/api'
     : '/api';
 
